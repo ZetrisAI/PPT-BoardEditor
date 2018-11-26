@@ -22,6 +22,7 @@ namespace PPTBoardEditor {
         }
 
         public static int DirectRead(int address) => Game.ReadInt32(new IntPtr(address));
+        public static bool DirectWrite(int address, int value) => Game.WriteInt32(new IntPtr(address), value);
 
         public static int PlayerCount() {
             int ret = Game.ReadByte(new IntPtr(
