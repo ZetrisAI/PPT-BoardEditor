@@ -41,7 +41,12 @@ namespace PPTBoardEditor {
             using (Graphics gfx = Graphics.FromImage(canvas.Image)) {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 40; j++) {
-                        gfx.FillRectangle(new SolidBrush(UIHelper.getTetrominoColor(board[i, j])), i * (canvas.Width / 10), (39 - j) * (canvas.Height / 40), canvas.Width / 10, canvas.Height / 40);
+                        Rectangle mino = new Rectangle(i * (canvas.Width / 10), (39 - j) * (canvas.Height / 40), canvas.Width / 10, canvas.Height / 40);
+                        gfx.FillRectangle(new SolidBrush(UIHelper.getTetrominoColor(board[i, j])), mino);
+
+                        mino.Width--;
+                        mino.Height--;
+                        gfx.DrawRectangle(new Pen(Color.Black), mino);
                     }
                 }
 

@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.canvasBoard = new System.Windows.Forms.PictureBox();
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.canvasSelector = new System.Windows.Forms.PictureBox();
@@ -69,8 +70,9 @@
             this.Controls.Add(this.canvasBoard);
             this.ForeColor = System.Drawing.Color.Gainsboro;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "Editor";
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).EndInit();
             this.ResumeLayout(false);
