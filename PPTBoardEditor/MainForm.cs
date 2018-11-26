@@ -14,6 +14,7 @@ namespace PPTBoardEditor {
         }
 
         int[,] board = new int[10, 40];
+        int selectedColor = 0;
 
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.EnsureGame()) {
@@ -27,6 +28,7 @@ namespace PPTBoardEditor {
                 }
 
                 UIHelper.drawBoard(canvasBoard, board);
+                UIHelper.drawSelector(canvasSelector, selectedColor);
             } else {
                 board = new int[10, 40];
             }
@@ -45,24 +47,28 @@ namespace PPTBoardEditor {
 
         private void canvasBoard_MouseMove(object sender, MouseEventArgs e) {
             if (mPressed && GameHelper.EnsureGame()) {
-                int x = e.X, y = e.Y;
-                x /= 15; y /= 15;
-                y = 39 - y;
-
+                int x = e.X / 15;
+                int y = 39 - e.Y / 15;
                 int boardAddress = GameHelper.BoardAddress(GameHelper.FindPlayer());
                 
-                if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39)
+                if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39) {
                     GameHelper.DirectWrite(
                         GameHelper.DirectRead(
-                            GameHelper.BoardAddress(
-                                GameHelper.FindPlayer()
-                            ) + x * 0x08
+                            boardAddress + x * 0x08
                         ) + y * 0x04,
-                        0x09
+                        selectedColor
                     );
-
-                label1.Text = x.ToString();
-                label2.Text = y.ToString();
+                }
+            }
+        }
+    
+        private void canvasSelector_MouseClick(object sender, MouseEventArgs e) {
+            int x = e.X / 15;
+            
+            if (0 <= x && x <= 9) {
+                if (x == 0) x = -1;
+                else if (x != 9) x--;
+                selectedColor = x;
             }
         }
     }

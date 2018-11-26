@@ -27,7 +27,7 @@ namespace PPTBoardEditor {
                     return Color.FromArgb(0, 255, 255);
 
                 case 7:
-                    return Color.FromArgb(239, 206, 26);
+                    return Color.Goldenrod;
 
                 case 9:
                     return Color.FromArgb(255, 255, 255);
@@ -46,6 +46,26 @@ namespace PPTBoardEditor {
                 }
 
                 gfx.DrawLine(new Pen(Color.Red), 0, canvas.Height / 2, canvas.Width, canvas.Height / 2);
+                gfx.Flush();
+            }
+        }
+
+        public static void drawSelector(PictureBox canvas, int color) {
+            if (color == 8) return;
+            if (color == -1) color = 0;
+            else if (color != 9) color++;
+
+            canvas.Image = new Bitmap(canvas.Width, canvas.Height);
+            using (Graphics gfx = Graphics.FromImage(canvas.Image)) {
+                for (int i = 0; i < 10; i++) {
+                    int j = i;
+                    if (j == 0) j = -1;
+                    else if (j != 9) j--;
+
+                    gfx.FillRectangle(new SolidBrush(UIHelper.getTetrominoColor(j)), i * (canvas.Width / 10), 0, canvas.Width / 10, canvas.Height);
+                }
+
+                gfx.DrawRectangle(new Pen(Color.Black), color * (canvas.Width / 10), 0, canvas.Width / 10 - 1, canvas.Height - 1);
                 gfx.Flush();
             }
         }

@@ -26,9 +26,9 @@
             this.components = new System.ComponentModel.Container();
             this.canvasBoard = new System.Windows.Forms.PictureBox();
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.canvasSelector = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).BeginInit();
             this.SuspendLayout();
             // 
             // canvasBoard
@@ -49,40 +49,31 @@
             this.scanTimer.Interval = 1;
             this.scanTimer.Tick += new System.EventHandler(this.scanTimer_Tick);
             // 
-            // label1
+            // canvasSelector
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(168, 144);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "label1";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(168, 159);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "label2";
+            this.canvasSelector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.canvasSelector.Location = new System.Drawing.Point(12, 618);
+            this.canvasSelector.Name = "canvasSelector";
+            this.canvasSelector.Size = new System.Drawing.Size(150, 15);
+            this.canvasSelector.TabIndex = 1;
+            this.canvasSelector.TabStop = false;
+            this.canvasSelector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseClick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
-            this.ClientSize = new System.Drawing.Size(247, 624);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(172, 641);
+            this.Controls.Add(this.canvasSelector);
             this.Controls.Add(this.canvasBoard);
             this.ForeColor = System.Drawing.Color.Gainsboro;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.Text = "Editor";
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -90,8 +81,7 @@
 
         private System.Windows.Forms.PictureBox canvasBoard;
         private System.Windows.Forms.Timer scanTimer;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox canvasSelector;
     }
 }
 
