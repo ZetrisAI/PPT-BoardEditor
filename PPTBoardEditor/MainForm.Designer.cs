@@ -28,6 +28,7 @@
             this.canvasBoard = new System.Windows.Forms.PictureBox();
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.canvasSelector = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).BeginInit();
             this.SuspendLayout();
@@ -60,12 +61,22 @@
             this.canvasSelector.TabStop = false;
             this.canvasSelector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseClick);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(169, 260);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "label1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
-            this.ClientSize = new System.Drawing.Size(172, 641);
+            this.ClientSize = new System.Drawing.Size(219, 641);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.canvasSelector);
             this.Controls.Add(this.canvasBoard);
             this.ForeColor = System.Drawing.Color.Gainsboro;
@@ -76,6 +87,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -84,6 +96,7 @@
         private System.Windows.Forms.PictureBox canvasBoard;
         private System.Windows.Forms.Timer scanTimer;
         private System.Windows.Forms.PictureBox canvasSelector;
+        private System.Windows.Forms.Label label1;
     }
 }
 

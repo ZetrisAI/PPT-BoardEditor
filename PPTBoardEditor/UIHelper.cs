@@ -36,7 +36,12 @@ namespace PPTBoardEditor {
             return Color.Transparent;
         }
 
-        public static void drawBoard(PictureBox canvas, int[,] board) {
+        public static void drawBoard(PictureBox canvas, int[,] board, bool active) {
+            if (!active) {
+                canvas.Image = null;
+                return;
+            }
+
             canvas.Image = new Bitmap(canvas.Width, canvas.Height);
             using (Graphics gfx = Graphics.FromImage(canvas.Image)) {
                 for (int i = 0; i < 10; i++) {
@@ -55,7 +60,12 @@ namespace PPTBoardEditor {
             }
         }
 
-        public static void drawSelector(PictureBox canvas, int color) {
+        public static void drawSelector(PictureBox canvas, int color, bool active) {
+            if (!active) {
+                canvas.Image = null;
+                return;
+            }
+
             if (color == 8) return;
             if (color == -1) color = 0;
             else if (color != 9) color++;

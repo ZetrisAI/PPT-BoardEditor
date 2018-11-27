@@ -16,19 +16,55 @@ namespace PPTBoardEditor {
         int[,] board = new int[10, 40];
         int selectedColor = 0;
 
+        int pieces = 0;
+        bool dropState = false;
+
+        int[] customQueue = new int[] { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.EnsureGame()) {
-                int boardAddress = GameHelper.BoardAddress(GameHelper.FindPlayer());
+                int playerID = GameHelper.FindPlayer();
 
-                for (int i = 0; i < 10; i++) {
-                    int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
-                    for (int j = 0; j < 40; j++) {
-                        board[i, j] = GameHelper.DirectRead(columnAddress + j * 0x04);
+                int boardAddress = GameHelper.BoardAddress(playerID);
+                bool active = boardAddress > 0x08000000;
+
+                if (active) {
+                    for (int i = 0; i < 10; i++) {
+                        int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
+                        for (int j = 0; j < 40; j++) {
+                            board[i, j] = GameHelper.DirectRead(columnAddress + j * 0x04);
+                        }
                     }
+
+                    bool drop = GameHelper.PieceDropped(playerID);
+                    if (drop != dropState) {
+                        if (!drop) pieces++;
+                        dropState = drop;
+                    }
+
+                    int queueAddress = GameHelper.QueueAddress(playerID);
+                    int current = GameHelper.CurrentPiece(playerID);
+                    if (current == 255 && GameHelper.FrameCount() < 140) {
+                        for (int i = 0; i < 5; i++) {
+                            GameHelper.DirectWrite(queueAddress + i * 0x04, customQueue[pieces + i]);
+                        }
+                    }
+
+                    if (current != 255 && pieces + 5 < customQueue.Length) {
+                        GameHelper.DirectWrite(queueAddress + 0x10, customQueue[pieces + 5]);
+                    }
+
+                } else {
+                    int[,] board = new int[10, 40];
+
+                    pieces = 0;
+                    dropState = false;
                 }
 
-                UIHelper.drawBoard(canvasBoard, board);
-                UIHelper.drawSelector(canvasSelector, selectedColor);
+                UIHelper.drawBoard(canvasBoard, board, active);
+                UIHelper.drawSelector(canvasSelector, selectedColor, active);
+
+                label1.Text = pieces.ToString();
             } else {
                 board = new int[10, 40];
             }
@@ -63,12 +99,14 @@ namespace PPTBoardEditor {
         }
     
         private void canvasSelector_MouseClick(object sender, MouseEventArgs e) {
-            int x = e.X / 15;
-            
-            if (0 <= x && x <= 9) {
-                if (x == 0) x = -1;
-                else if (x != 9) x--;
-                selectedColor = x;
+            if (GameHelper.EnsureGame()) {
+                int x = e.X / 15;
+
+                if (GameHelper.BoardAddress(GameHelper.FindPlayer()) > 0x08000000 && 0 <= x && x <= 9) {
+                    if (x == 0) x = -1;
+                    else if (x != 9) x--;
+                    selectedColor = x;
+                }
             }
         }
     }

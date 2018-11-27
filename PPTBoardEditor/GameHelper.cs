@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace PPTBoardEditor {
     static class GameHelper {
         static VAMemory Game = new VAMemory("puyopuyotetris");
-
+        
         public static bool EnsureGame() {
             if (Game == null) {
                 if (Process.GetProcessesByName("puyopuyotetris").Length != 0) {
@@ -64,6 +64,10 @@ namespace PPTBoardEditor {
             return 0;
         }
 
+        public static bool InMatch() {
+            return Game.ReadInt32(new IntPtr(0x140573A78)) == 0x0;
+        }
+
         public static int BoardAddress(int index) {
             switch (index) {
                 case 0:
@@ -90,6 +94,116 @@ namespace PPTBoardEditor {
             }
 
             return -1;
-        }      
+        }
+
+        public static int QueueAddress(int index) {
+            switch (index) {
+                case 0:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                0x140461B20
+                            )) + 0x378
+                        )) + 0xB8
+                    )) + 0x15C;
+
+                case 1:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    0x1405989D0
+                                )) + 0x78
+                            )) + 0x28
+                        )) + 0xB8
+                    )) + 0x15C;
+            }
+
+            return -1;
+        }
+
+        public static int CurrentPiece(int index) {
+            switch (index) {
+                case 0:
+                    return Game.ReadByte(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        0x140461B20
+                                    )) + 0x378
+                                )) + 0x40
+                            )) + 0x140
+                        )) + 0x110
+                    ));
+
+                case 1:
+                    return Game.ReadByte(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        0x140461B28
+                                    )) + 0x380
+                                )) + 0x40
+                            )) + 0x140
+                        )) + 0x110
+                    ));
+            }
+
+            return -1;
+        }
+
+        public static bool PieceDropped(int index) {
+            int ret = 0;
+
+            switch (index) {
+                case 0:
+                    ret = Game.ReadByte(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        Game.ReadInt32(new IntPtr(
+                                            0x140460C08
+                                        )) + 0x18
+                                    )) + 0x268
+                                )) + 0x38
+                            )) + 0x3C8
+                        )) + 0x1C
+                    ));
+                    break;
+
+                case 1:
+                    ret = Game.ReadByte(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        Game.ReadInt32(new IntPtr(
+                                            0x1405989D0
+                                        )) + 0x78
+                                    )) + 0x20
+                                )) + 0xA8
+                            )) + 0x3C8
+                        )) + 0x1C
+                    ));
+                    break;
+            }
+
+            return ret != 0;
+        }
+
+        public static int FrameCount() => Game.ReadInt32(new IntPtr(
+            Game.ReadInt32(new IntPtr(
+                Game.ReadInt32(new IntPtr(
+                    Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            0x140598A20
+                        )) + 0x138
+                    )) + 0x18
+                )) + 0x100
+            )) + 0x58
+        ));
     }
 }
