@@ -19,8 +19,6 @@ namespace PPTBoardEditor {
         int pieces = 0;
         bool dropState = false;
 
-        int[] customQueue = new int[] { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
-
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.EnsureGame()) {
                 int playerID = GameHelper.FindPlayer();
@@ -45,13 +43,13 @@ namespace PPTBoardEditor {
                     int queueAddress = GameHelper.QueueAddress(playerID);
                     int current = GameHelper.CurrentPiece(playerID);
                     if (current == 255 && GameHelper.FrameCount() < 140) {
-                        for (int i = 0; i < 5; i++) {
-                            GameHelper.DirectWrite(queueAddress + i * 0x04, customQueue[pieces + i]);
+                        for (int i = 0; i < Math.Min(5, listQueue.Items.Count); i++) {
+                            GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[pieces + i]).Index);
                         }
                     }
 
-                    if (current != 255 && pieces + 5 < customQueue.Length) {
-                        GameHelper.DirectWrite(queueAddress + 0x10, customQueue[pieces + 5]);
+                    if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Enabled && listQueue.Items.Count > 0))) {
+                        GameHelper.DirectWrite(queueAddress + 0x10, ((Tetromino)listQueue.Items[(pieces + 5) % listQueue.Items.Count]).Index);
                     }
 
                 } else {
@@ -63,8 +61,6 @@ namespace PPTBoardEditor {
 
                 UIHelper.drawBoard(canvasBoard, board, active);
                 UIHelper.drawSelector(canvasSelector, selectedColor, active);
-
-                label1.Text = pieces.ToString();
             } else {
                 board = new int[10, 40];
             }
@@ -108,6 +104,94 @@ namespace PPTBoardEditor {
                     selectedColor = x;
                 }
             }
+        }
+        
+        private void listQueue_KeyDown(object sender, KeyEventArgs e) {
+            int index = listQueue.SelectedIndex;
+            if (index == -1) index = listQueue.Items.Count;
+
+            switch (e.KeyCode) {
+                case Keys.S:
+                    listQueue.Items.Insert(index, new Tetromino(0));
+                    break;
+
+                case Keys.Z:
+                    listQueue.Items.Insert(index, new Tetromino(1));
+                    break;
+
+                case Keys.J:
+                    listQueue.Items.Insert(index, new Tetromino(2));
+                    break;
+
+                case Keys.L:
+                    listQueue.Items.Insert(index, new Tetromino(3));
+                    break;
+
+                case Keys.T:
+                    listQueue.Items.Insert(index, new Tetromino(4));
+                    break;
+
+                case Keys.O:
+                    listQueue.Items.Insert(index, new Tetromino(5));
+                    break;
+
+                case Keys.I:
+                    listQueue.Items.Insert(index, new Tetromino(6));
+                    break;
+
+                case Keys.M:
+                    listQueue.Items.Insert(index, new Tetromino(7));
+                    break;
+
+                case Keys.Delete:
+                    if (index != listQueue.Items.Count) {
+                        listQueue.Items.RemoveAt(index);
+                        if (index == listQueue.Items.Count) {
+                            listQueue.SelectedIndex = index - 1;
+                        } else {
+                            listQueue.SelectedIndex = index;
+                        }
+                    }
+                    break;
+            }
+            
+            e.SuppressKeyPress = true;
+        }
+
+        private void listQueue_MouseDoubleClick(object sender, MouseEventArgs e) {
+            int index = listQueue.IndexFromPoint(e.X, e.Y);
+
+            if (index != -1) {
+                listQueue.Items.RemoveAt(index);
+            }
+        }
+
+        int lHolding = -1;
+
+        private void listQueue_MouseDown(object sender, MouseEventArgs e) {
+            int index = listQueue.IndexFromPoint(e.X, e.Y);
+
+            if (index != -1) {
+                lHolding = index;
+            } else {
+                listQueue.SelectedIndex = -1;
+            }
+        }
+
+        private void listQueue_MouseMove(object sender, MouseEventArgs e) {
+            int index = listQueue.IndexFromPoint(e.X, e.Y);
+
+            if (lHolding != -1 && index != -1 && index != lHolding) {
+                var item = listQueue.Items[lHolding];
+                listQueue.Items.RemoveAt(lHolding);
+
+                listQueue.Items.Insert(index, item);
+                lHolding = index;
+            }
+        }
+
+        private void listQueue_MouseUp(object sender, MouseEventArgs e) {
+            lHolding = -1;
         }
     }
 }

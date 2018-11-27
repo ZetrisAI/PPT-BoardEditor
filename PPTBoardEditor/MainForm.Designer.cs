@@ -28,7 +28,8 @@
             this.canvasBoard = new System.Windows.Forms.PictureBox();
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.canvasSelector = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.listQueue = new System.Windows.Forms.ListBox();
+            this.checkLoop = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).BeginInit();
             this.SuspendLayout();
@@ -61,22 +62,40 @@
             this.canvasSelector.TabStop = false;
             this.canvasSelector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseClick);
             // 
-            // label1
+            // listQueue
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(169, 260);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "label1";
+            this.listQueue.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.listQueue.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listQueue.ForeColor = System.Drawing.Color.Gainsboro;
+            this.listQueue.FormattingEnabled = true;
+            this.listQueue.Location = new System.Drawing.Point(168, 13);
+            this.listQueue.Name = "listQueue";
+            this.listQueue.Size = new System.Drawing.Size(32, 598);
+            this.listQueue.TabIndex = 3;
+            this.listQueue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listQueue_KeyDown);
+            this.listQueue.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseDoubleClick);
+            this.listQueue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseDown);
+            this.listQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseMove);
+            this.listQueue.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseUp);
+            // 
+            // checkLoop
+            // 
+            this.checkLoop.AutoSize = true;
+            this.checkLoop.Location = new System.Drawing.Point(165, 618);
+            this.checkLoop.Name = "checkLoop";
+            this.checkLoop.Size = new System.Drawing.Size(50, 17);
+            this.checkLoop.TabIndex = 4;
+            this.checkLoop.Text = "Loop";
+            this.checkLoop.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
-            this.ClientSize = new System.Drawing.Size(219, 641);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(214, 641);
+            this.Controls.Add(this.checkLoop);
+            this.Controls.Add(this.listQueue);
             this.Controls.Add(this.canvasSelector);
             this.Controls.Add(this.canvasBoard);
             this.ForeColor = System.Drawing.Color.Gainsboro;
@@ -96,7 +115,8 @@
         private System.Windows.Forms.PictureBox canvasBoard;
         private System.Windows.Forms.Timer scanTimer;
         private System.Windows.Forms.PictureBox canvasSelector;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox listQueue;
+        private System.Windows.Forms.CheckBox checkLoop;
     }
 }
 

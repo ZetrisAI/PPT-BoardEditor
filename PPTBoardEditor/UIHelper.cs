@@ -3,39 +3,6 @@ using System.Windows.Forms;
 
 namespace PPTBoardEditor {
     class UIHelper {
-        public static Color getTetrominoColor(int x) {
-            switch (x) {
-                case 0:
-                    return Color.FromArgb(0, 255, 0);
-
-                case 1:
-                    return Color.FromArgb(255, 0, 0);
-
-                case 2:
-                    return Color.FromArgb(0, 0, 255);
-
-                case 3:
-                    return Color.FromArgb(255, 63, 0);
-
-                case 4:
-                    return Color.FromArgb(63, 0, 255);
-
-                case 5:
-                    return Color.FromArgb(255, 255, 0);
-
-                case 6:
-                    return Color.FromArgb(0, 255, 255);
-
-                case 7:
-                    return Color.Goldenrod;
-
-                case 9:
-                    return Color.FromArgb(255, 255, 255);
-            }
-
-            return Color.Transparent;
-        }
-
         public static void drawBoard(PictureBox canvas, int[,] board, bool active) {
             if (!active) {
                 canvas.Image = null;
@@ -47,7 +14,7 @@ namespace PPTBoardEditor {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 40; j++) {
                         Rectangle mino = new Rectangle(i * (canvas.Width / 10), (39 - j) * (canvas.Height / 40), canvas.Width / 10, canvas.Height / 40);
-                        gfx.FillRectangle(new SolidBrush(UIHelper.getTetrominoColor(board[i, j])), mino);
+                        gfx.FillRectangle(new SolidBrush(new Tetromino(board[i, j]).Color()), mino);
 
                         mino.Width--;
                         mino.Height--;
@@ -77,7 +44,7 @@ namespace PPTBoardEditor {
                     if (j == 0) j = -1;
                     else if (j != 9) j--;
 
-                    gfx.FillRectangle(new SolidBrush(UIHelper.getTetrominoColor(j)), i * (canvas.Width / 10), 0, canvas.Width / 10, canvas.Height);
+                    gfx.FillRectangle(new SolidBrush(new Tetromino(j).Color()), i * (canvas.Width / 10), 0, canvas.Width / 10, canvas.Height);
                 }
 
                 gfx.DrawRectangle(new Pen(Color.Black), color * (canvas.Width / 10), 0, canvas.Width / 10 - 1, canvas.Height - 1);
