@@ -42,9 +42,9 @@ namespace PPTBoardEditor {
 
                     int queueAddress = GameHelper.QueueAddress(playerID);
                     int current = GameHelper.CurrentPiece(playerID);
-                    if (current == 255 && GameHelper.FrameCount() < 140) {
-                        for (int i = 0; i < Math.Min(5, listQueue.Items.Count); i++) {
-                            GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[pieces + i]).Index);
+                    if (current == 255 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
+                        for (int i = 0; i < (checkLoop.Enabled? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
+                            GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[(pieces + i) % listQueue.Items.Count]).Index);
                         }
                     }
 
