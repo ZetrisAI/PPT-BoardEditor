@@ -154,6 +154,64 @@ namespace PPTBoardEditor {
             return -1;
         }
 
+        public static int RotationPointer(int index) {
+            switch (index) {
+                case 0:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        0x140460C08
+                                    )) + 0x18
+                                )) + 0x268
+                            )) + 0x38
+                        )) + 0x3C8
+                    )) + 0x18;
+
+                case 1:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    Game.ReadInt32(new IntPtr(
+                                        0x1405989D0
+                                    )) + 0x78
+                                )) + 0x20
+                            )) + 0xA8
+                        )) + 0x3C8
+                    )) + 0x18;
+            }
+
+            return -1;
+        }
+
+        public static int HoldPointer(int index) {
+            switch (index) {
+                case 0:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                0x140598A20
+                            )) + 0x38
+                        )) + 0x3D0
+                    )) + 0x8;
+
+                case 1:
+                    return Game.ReadInt32(new IntPtr(
+                        Game.ReadInt32(new IntPtr(
+                            Game.ReadInt32(new IntPtr(
+                                Game.ReadInt32(new IntPtr(
+                                    0x1405989D0
+                                )) + 0x270
+                            )) + 0x20
+                        )) + 0x3D0
+                    )) + 0x8;
+            }
+
+            return -1;
+        }
+
         public static bool PieceDropped(int index) {
             int ret = 0;
 

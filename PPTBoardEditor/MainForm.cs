@@ -17,6 +17,7 @@ namespace PPTBoardEditor {
         int selectedColor = 0;
 
         int pieces = 0;
+        int holdPTR = 0x0, rotPTR = 0x0;
         bool dropState = false;
 
         private void scanTimer_Tick(object sender, EventArgs e) {
@@ -43,12 +44,23 @@ namespace PPTBoardEditor {
                     int queueAddress = GameHelper.QueueAddress(playerID);
                     int current = GameHelper.CurrentPiece(playerID);
                     if (current == 255 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
-                        for (int i = 0; i < (checkLoop.Enabled? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
+                        for (int i = 0; i < (checkLoop.Checked? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
                             GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[(pieces + i) % listQueue.Items.Count]).Index);
                         }
                     }
 
-                    if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Enabled && listQueue.Items.Count > 0))) {
+                    int hold = GameHelper.HoldPointer(playerID);
+                    if (holdPTR != hold && holdPTR < 0x08000000 && hold >= 0x08000000) {
+                        int rot = GameHelper.RotationPointer(playerID);
+                        if (rot >= 0x08000000) {
+                            pieces++;
+                        } else {
+                            hold = 0x8;
+                        }
+                    }
+                    holdPTR = hold;
+
+                    if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Checked && listQueue.Items.Count > 0))) {
                         GameHelper.DirectWrite(queueAddress + 0x10, ((Tetromino)listQueue.Items[(pieces + 5) % listQueue.Items.Count]).Index);
                     }
 
