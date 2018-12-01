@@ -5,14 +5,19 @@ using System.Windows.Forms;
 
 namespace PPTBoardEditor {
     static class Program {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        static PlayerForm[] players = new PlayerForm[2];
+
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            for (int i = 0; i < 2; i++) {
+                players[i] = new PlayerForm(i);
+                players[i].Show();
+            }
+
+            Application.Run();
         }
     }
 }

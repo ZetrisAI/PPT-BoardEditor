@@ -1,5 +1,5 @@
 ﻿namespace PPTBoardEditor {
-    partial class MainForm {
+    partial class PlayerForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayerForm));
             this.canvasBoard = new System.Windows.Forms.PictureBox();
             this.scanTimer = new System.Windows.Forms.Timer(this.components);
             this.canvasSelector = new System.Windows.Forms.PictureBox();
@@ -89,7 +89,7 @@
             this.checkLoop.Text = "Loop";
             this.checkLoop.UseVisualStyleBackColor = true;
             // 
-            // MainForm
+            // PlayerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -103,7 +103,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "MainForm";
+            this.Name = "PlayerForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).EndInit();
             this.ResumeLayout(false);

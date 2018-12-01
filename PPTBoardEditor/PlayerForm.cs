@@ -8,9 +8,17 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace PPTBoardEditor {
-    public partial class MainForm : Form {
-        public MainForm() {
+    public partial class PlayerForm : Form {
+        public PlayerForm(int index) {
             InitializeComponent();
+            windowIndex = index;
+            Text = $"Player {windowIndex + 1}";
+        }
+
+        int windowIndex, playerIndex;
+        
+        int playerID {
+            get => Convert.ToInt32(windowIndex != playerIndex);
         }
 
         int[,] board = new int[10, 40];
@@ -22,7 +30,7 @@ namespace PPTBoardEditor {
 
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.EnsureGame()) {
-                int playerID = GameHelper.FindPlayer();
+                playerIndex = GameHelper.FindPlayer();
 
                 int boardAddress = GameHelper.BoardAddress(playerID);
                 bool active = boardAddress > 0x08000000;
@@ -93,7 +101,7 @@ namespace PPTBoardEditor {
             if (mPressed && GameHelper.EnsureGame()) {
                 int x = e.X / 15;
                 int y = 39 - e.Y / 15;
-                int boardAddress = GameHelper.BoardAddress(GameHelper.FindPlayer());
+                int boardAddress = GameHelper.BoardAddress(playerID);
                 
                 if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39) {
                     GameHelper.DirectWrite(
@@ -110,7 +118,7 @@ namespace PPTBoardEditor {
             if (GameHelper.EnsureGame()) {
                 int x = e.X / 15;
 
-                if (GameHelper.BoardAddress(GameHelper.FindPlayer()) > 0x08000000 && 0 <= x && x <= 9) {
+                if (GameHelper.BoardAddress(playerID) > 0x08000000 && 0 <= x && x <= 9) {
                     if (x == 0) x = -1;
                     else if (x != 9) x--;
                     selectedColor = x;
@@ -214,6 +222,10 @@ namespace PPTBoardEditor {
                 listQueue.Items.Insert(index, item);
                 lHolding = index;
             }
+        }
+
+        private void PlayerForm_FormClosing(object sender, EventArgs e) {
+            Application.Exit();
         }
 
         private void listQueue_MouseUp(object sender, MouseEventArgs e) {
