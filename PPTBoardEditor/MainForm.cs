@@ -17,7 +17,7 @@ namespace PPTBoardEditor {
         int selectedColor = 0;
 
         int pieces = 0;
-        int holdPTR = 0x0, rotPTR = 0x0;
+        int holdPTR = 0x0;
         bool dropState = false;
 
         private void scanTimer_Tick(object sender, EventArgs e) {
@@ -117,6 +117,8 @@ namespace PPTBoardEditor {
                 }
             }
         }
+
+        bool pentomino = false;
         
         private void listQueue_KeyDown(object sender, KeyEventArgs e) {
             int index = listQueue.SelectedIndex;
@@ -124,35 +126,39 @@ namespace PPTBoardEditor {
 
             switch (e.KeyCode) {
                 case Keys.S:
-                    listQueue.Items.Insert(index, new Tetromino(0));
+                    listQueue.Items.Insert(index, new Tetromino(0 + (pentomino? 8 : 0)));
                     break;
 
                 case Keys.Z:
-                    listQueue.Items.Insert(index, new Tetromino(1));
+                    listQueue.Items.Insert(index, new Tetromino(1 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.J:
-                    listQueue.Items.Insert(index, new Tetromino(2));
+                    listQueue.Items.Insert(index, new Tetromino(2 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.L:
-                    listQueue.Items.Insert(index, new Tetromino(3));
+                    listQueue.Items.Insert(index, new Tetromino(3 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.T:
-                    listQueue.Items.Insert(index, new Tetromino(4));
+                    listQueue.Items.Insert(index, new Tetromino(4 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.O:
-                    listQueue.Items.Insert(index, new Tetromino(5));
+                    listQueue.Items.Insert(index, new Tetromino(5 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.I:
-                    listQueue.Items.Insert(index, new Tetromino(6));
+                    listQueue.Items.Insert(index, new Tetromino(6 + (pentomino ? 8 : 0)));
                     break;
 
                 case Keys.M:
                     listQueue.Items.Insert(index, new Tetromino(7));
+                    break;
+
+                case Keys.D5:
+                    pentomino = true;
                     break;
 
                 case Keys.Delete:
@@ -167,6 +173,14 @@ namespace PPTBoardEditor {
                     break;
             }
             
+            e.SuppressKeyPress = true;
+        }
+
+        private void listQueue_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.D5) {
+                pentomino = false;
+            }
+
             e.SuppressKeyPress = true;
         }
 

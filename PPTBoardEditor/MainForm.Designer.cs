@@ -73,6 +73,7 @@
             this.listQueue.Size = new System.Drawing.Size(32, 598);
             this.listQueue.TabIndex = 3;
             this.listQueue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listQueue_KeyDown);
+            this.listQueue.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listQueue_KeyUp);
             this.listQueue.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseDoubleClick);
             this.listQueue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseDown);
             this.listQueue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listQueue_MouseMove);

@@ -14,7 +14,7 @@ namespace PPTBoardEditor {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 40; j++) {
                         Rectangle mino = new Rectangle(i * (canvas.Width / 10), (39 - j) * (canvas.Height / 40), canvas.Width / 10, canvas.Height / 40);
-                        gfx.FillRectangle(new SolidBrush(new Tetromino(board[i, j]).Color()), mino);
+                        gfx.FillRectangle(new SolidBrush(Tetromino.BoardColor(board[i, j])), mino);
 
                         mino.Width--;
                         mino.Height--;
@@ -44,7 +44,7 @@ namespace PPTBoardEditor {
                     if (j == 0) j = -1;
                     else if (j != 9) j--;
 
-                    gfx.FillRectangle(new SolidBrush(new Tetromino(j).Color()), i * (canvas.Width / 10), 0, canvas.Width / 10, canvas.Height);
+                    gfx.FillRectangle(new SolidBrush(Tetromino.BoardColor(j)), i * (canvas.Width / 10), 0, canvas.Width / 10, canvas.Height);
                 }
 
                 gfx.DrawRectangle(new Pen(Color.Black), color * (canvas.Width / 10), 0, canvas.Width / 10 - 1, canvas.Height - 1);
