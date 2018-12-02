@@ -23,9 +23,11 @@ namespace PPTBoardEditor {
                 case 7:
                 case 8: return System.Drawing.Color.Goldenrod;
                 case 9: return System.Drawing.Color.FromArgb(255, 255, 255);
+                case -2: return System.Drawing.Color.FromArgb(0, 0, 0);
+                case -1: return System.Drawing.Color.Transparent;
             }
 
-            return System.Drawing.Color.Transparent;
+            return System.Drawing.Color.FromArgb(63, 63, 63);
         }
 
         public static Color Color(int index) {

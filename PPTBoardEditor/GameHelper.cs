@@ -75,19 +75,21 @@ namespace PPTBoardEditor {
                         Game.ReadInt32(new IntPtr(
                             Game.ReadInt32(new IntPtr(
                                 Game.ReadInt32(new IntPtr(
-                                    0x140598A20
-                                )) + 0x38
-                            )) + 0x3C0
-                        )) + 0x18
-                    ));
+                                    0x140461B20
+                                )) + 0x378
+                            )) + 0xA8
+                        )) + 0x3C0
+                    )) + 0x50;
 
                 case 1:
                     return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
+                         Game.ReadInt32(new IntPtr(
                             Game.ReadInt32(new IntPtr(
                                 Game.ReadInt32(new IntPtr(
-                                    0x1405989D8
-                                )) + 0x28
+                                    Game.ReadInt32(new IntPtr(
+                                        0x1404611B8
+                                    )) + 0x30
+                                )) + 0xA8
                             )) + 0x3C0
                         )) + 0x18
                     ));
@@ -145,9 +147,9 @@ namespace PPTBoardEditor {
                                     Game.ReadInt32(new IntPtr(
                                         0x1404611B8
                                     )) + 0x30
-                                )) + 0xB0
-                            )) + 0x60
-                        )) + 0x640
+                                )) + 0xC0
+                            )) + 0x18
+                        )) + 0x610
                     ));
             }
 
