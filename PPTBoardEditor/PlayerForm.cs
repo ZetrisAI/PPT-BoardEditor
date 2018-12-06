@@ -103,7 +103,7 @@ namespace PPTBoardEditor {
                 int y = 39 - e.Y / 15;
                 int boardAddress = GameHelper.BoardAddress(playerID);
                 
-                if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39) {
+                if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39 && board[x, y] != -2) {
                     GameHelper.DirectWrite(
                         GameHelper.DirectRead(
                             boardAddress + x * 0x08
