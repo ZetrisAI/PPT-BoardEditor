@@ -13,7 +13,6 @@ namespace PPTBoardEditor {
         public PlayerForm(int index) {
             InitializeComponent();
             windowIndex = index;
-            Text = $"Player {windowIndex + 1}";
         }
 
         int windowIndex, playerIndex;
@@ -83,6 +82,8 @@ namespace PPTBoardEditor {
 
                 UIHelper.drawBoard(canvasBoard, board, active);
                 UIHelper.drawSelector(canvasSelector, (int[])selectedColor.Clone(), active);
+
+                Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {windowIndex + 1}";
             } else {
                 board = new int[10, 40];
             }

@@ -64,9 +64,9 @@ namespace PPTBoardEditor {
             return 0;
         }
 
-        public static bool InMatch() {
-            return Game.ReadInt32(new IntPtr(0x140573A78)) == 0x0;
-        }
+        public static string PlayerName(int index) => Game.ReadStringUnicode(new IntPtr(0x140598BD4 + index * 0x68), 0x20);
+
+        public static bool InMatch() => Game.ReadInt32(new IntPtr(0x140573A78)) == 0x0;
 
         public static int BoardAddress(int index) {
             switch (index) {
