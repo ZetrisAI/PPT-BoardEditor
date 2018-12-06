@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,12 +23,13 @@ namespace PPTBoardEditor {
         }
 
         int[,] board = new int[10, 40];
-        int selectedColor = 0;
+        int[] selectedColor = new int[2] {9, -1};
 
         int pieces = 0;
         int holdPTR = 0x0;
         bool dropState = false;
 
+        [DebuggerStepThrough]
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.EnsureGame()) {
                 playerIndex = GameHelper.FindPlayer();
@@ -80,50 +82,73 @@ namespace PPTBoardEditor {
                 }
 
                 UIHelper.drawBoard(canvasBoard, board, active);
-                UIHelper.drawSelector(canvasSelector, selectedColor, active);
+                UIHelper.drawSelector(canvasSelector, (int[])selectedColor.Clone(), active);
             } else {
                 board = new int[10, 40];
             }
         }
 
-        bool mPressed = false;
+        bool canvasBoardPressed = false;
 
         private void canvasBoard_MouseDown(object sender, MouseEventArgs e) {
-            mPressed = true;
+            canvasBoardPressed = true;
             canvasBoard_MouseMove(sender, e);
         }
 
         private void canvasBoard_MouseUp(object sender, MouseEventArgs e) {
-            mPressed = false;
+            if (e.Button == MouseButtons.None)
+                canvasBoardPressed = false;
         }
 
         private void canvasBoard_MouseMove(object sender, MouseEventArgs e) {
-            if (mPressed && GameHelper.EnsureGame()) {
+            if (canvasBoardPressed && GameHelper.EnsureGame()) {
                 int x = e.X / 15;
                 int y = 39 - e.Y / 15;
                 int boardAddress = GameHelper.BoardAddress(playerID);
                 
                 if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39 && board[x, y] != -2) {
-                    GameHelper.DirectWrite(
-                        GameHelper.DirectRead(
-                            boardAddress + x * 0x08
-                        ) + y * 0x04,
-                        selectedColor
-                    );
+                    int pixelAddress = GameHelper.DirectRead(
+                        boardAddress + x * 0x08
+                    ) + y * 0x04;
+
+                    if (e.Button.HasFlag(MouseButtons.Left)) {
+                        GameHelper.DirectWrite(pixelAddress, selectedColor[0]);
+                    } else if (e.Button.HasFlag(MouseButtons.Right)) {
+                        GameHelper.DirectWrite(pixelAddress, selectedColor[1]);
+                    }
+                   
                 }
             }
         }
-    
-        private void canvasSelector_MouseClick(object sender, MouseEventArgs e) {
-            if (GameHelper.EnsureGame()) {
+
+        bool canvasSelectorPressed = false;
+
+        private void canvasSelector_MouseDown(object sender, MouseEventArgs e) {
+            canvasSelectorPressed = true;
+            canvasSelector_MouseMove(sender, e);
+        }
+
+        private void canvasSelector_MouseMove(object sender, MouseEventArgs e) {
+            if (canvasSelectorPressed && GameHelper.EnsureGame()) {
                 int x = e.X / 15;
 
                 if (GameHelper.BoardAddress(playerID) > 0x08000000 && 0 <= x && x <= 9) {
                     if (x == 0) x = -1;
                     else if (x != 9) x--;
-                    selectedColor = x;
+
+                    if (e.Button.HasFlag(MouseButtons.Left)) {
+                        selectedColor[0] = x;
+                    }
+                    if (e.Button.HasFlag(MouseButtons.Right)) {
+                        selectedColor[1] = x;
+                    }
                 }
             }
+        }
+
+        private void canvasSelector_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.None)
+                canvasSelectorPressed = false;
         }
 
         bool pentomino = false;

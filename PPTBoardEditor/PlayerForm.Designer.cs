@@ -60,7 +60,9 @@
             this.canvasSelector.Size = new System.Drawing.Size(150, 15);
             this.canvasSelector.TabIndex = 1;
             this.canvasSelector.TabStop = false;
-            this.canvasSelector.MouseClick += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseClick);
+            this.canvasSelector.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseDown);
+            this.canvasSelector.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseMove);
+            this.canvasSelector.MouseUp += new System.Windows.Forms.MouseEventHandler(this.canvasSelector_MouseUp);
             // 
             // listQueue
             // 
