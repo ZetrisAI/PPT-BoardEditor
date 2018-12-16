@@ -44,10 +44,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VAMemory, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\VAMemory.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameHelper.cs" />
@@ -86,6 +82,13 @@
   <ItemGroup>
     <Content Include="icon.ico" />
     <Content Include="VAMemory.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProcessMemory\ProcessMemory\ProcessMemory.csproj">
+      <Project>{35b5c872-d829-428f-9dfa-8ef2b4de194c}</Project>
+      <Name>ProcessMemory</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

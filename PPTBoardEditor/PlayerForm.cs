@@ -27,66 +27,61 @@ namespace PPTBoardEditor {
         int pieces = 0;
         int holdPTR = 0x0;
         bool dropState = false;
-
-        [DebuggerStepThrough]
+        
         private void scanTimer_Tick(object sender, EventArgs e) {
-            if (GameHelper.EnsureGame()) {
-                playerIndex = GameHelper.FindPlayer();
+            playerIndex = GameHelper.FindPlayer();
 
-                int boardAddress = GameHelper.BoardAddress(playerID);
-                bool active = boardAddress > 0x08000000;
+            int boardAddress = GameHelper.BoardAddress(playerID);
+            bool active = boardAddress > 0x08000000;
 
-                if (active) {
-                    for (int i = 0; i < 10; i++) {
-                        int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
-                        for (int j = 0; j < 40; j++) {
-                            board[i, j] = GameHelper.DirectRead(columnAddress + j * 0x04);
-                        }
+            if (active) {
+                for (int i = 0; i < 10; i++) {
+                    int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
+                    for (int j = 0; j < 40; j++) {
+                        board[i, j] = GameHelper.DirectRead(columnAddress + j * 0x04);
                     }
-
-                    bool drop = GameHelper.PieceDropped(playerID);
-                    if (drop != dropState) {
-                        if (!drop) pieces++;
-                        dropState = drop;
-                    }
-
-                    int queueAddress = GameHelper.QueueAddress(playerID);
-                    int current = GameHelper.CurrentPiece(playerID);
-                    if (current == 255 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
-                        for (int i = 0; i < (checkLoop.Checked? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
-                            GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[(pieces + i) % listQueue.Items.Count]).Index);
-                        }
-                    }
-
-                    int hold = GameHelper.HoldPointer(playerID);
-                    if (holdPTR != hold && holdPTR < 0x08000000 && hold >= 0x08000000) {
-                        int rot = GameHelper.RotationPointer(playerID);
-                        if (rot >= 0x08000000) {
-                            pieces++;
-                        } else {
-                            hold = 0x8;
-                        }
-                    }
-                    holdPTR = hold;
-
-                    if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Checked && listQueue.Items.Count > 0))) {
-                        GameHelper.DirectWrite(queueAddress + 0x10, ((Tetromino)listQueue.Items[(pieces + 5) % listQueue.Items.Count]).Index);
-                    }
-
-                } else {
-                    int[,] board = new int[10, 40];
-
-                    pieces = 0;
-                    dropState = false;
                 }
 
-                UIHelper.drawBoard(canvasBoard, board, active);
-                UIHelper.drawSelector(canvasSelector, (int[])selectedColor.Clone(), active);
+                bool drop = GameHelper.PieceDropped(playerID);
+                if (drop != dropState) {
+                    if (!drop) pieces++;
+                    dropState = drop;
+                }
 
-                Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {windowIndex + 1}";
+                int queueAddress = GameHelper.QueueAddress(playerID);
+                int current = GameHelper.CurrentPiece(playerID);
+                if (current == 255 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
+                    for (int i = 0; i < (checkLoop.Checked? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
+                        GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[(pieces + i) % listQueue.Items.Count]).Index);
+                    }
+                }
+
+                int hold = GameHelper.HoldPointer(playerID);
+                if (holdPTR != hold && holdPTR < 0x08000000 && hold >= 0x08000000) {
+                    int rot = GameHelper.RotationPointer(playerID);
+                    if (rot >= 0x08000000) {
+                        pieces++;
+                    } else {
+                        hold = 0x8;
+                    }
+                }
+                holdPTR = hold;
+
+                if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Checked && listQueue.Items.Count > 0))) {
+                    GameHelper.DirectWrite(queueAddress + 0x10, ((Tetromino)listQueue.Items[(pieces + 5) % listQueue.Items.Count]).Index);
+                }
+
             } else {
-                board = new int[10, 40];
+                int[,] board = new int[10, 40];
+
+                pieces = 0;
+                dropState = false;
             }
+
+            UIHelper.drawBoard(canvasBoard, board, active);
+            UIHelper.drawSelector(canvasSelector, (int[])selectedColor.Clone(), active);
+
+            Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {windowIndex + 1}";
         }
 
         bool canvasBoardPressed = false;
@@ -102,7 +97,7 @@ namespace PPTBoardEditor {
         }
 
         private void canvasBoard_MouseMove(object sender, MouseEventArgs e) {
-            if (canvasBoardPressed && GameHelper.EnsureGame()) {
+            if (canvasBoardPressed) {
                 int x = e.X / 15;
                 int y = 39 - e.Y / 15;
                 int boardAddress = GameHelper.BoardAddress(playerID);
@@ -130,7 +125,7 @@ namespace PPTBoardEditor {
         }
 
         private void canvasSelector_MouseMove(object sender, MouseEventArgs e) {
-            if (canvasSelectorPressed && GameHelper.EnsureGame()) {
+            if (canvasSelectorPressed) {
                 int x = e.X / 15;
 
                 if (GameHelper.BoardAddress(playerID) > 0x08000000 && 0 <= x && x <= 9) {

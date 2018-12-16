@@ -3,24 +3,8 @@ using System.Diagnostics;
 
 namespace PPTBoardEditor {
     static class GameHelper {
-        static VAMemory Game = new VAMemory("puyopuyotetris");
+        static ProcessMemory Game = new ProcessMemory("puyopuyotetris");
         
-        public static bool EnsureGame() {
-            if (Game == null) {
-                if (Process.GetProcessesByName("puyopuyotetris").Length != 0) {
-                    Game = new VAMemory("puyopuyotetris");
-                } else {
-                    return false;
-                }
-
-            } else if (Process.GetProcessesByName("puyopuyotetris").Length == 0) {
-                Game = null;
-                return false;
-            }
-
-            return true;
-        }
-
         public static int DirectRead(int address) => Game.ReadInt32(new IntPtr(address));
         public static bool DirectWrite(int address, int value) => Game.WriteInt32(new IntPtr(address), value);
 
