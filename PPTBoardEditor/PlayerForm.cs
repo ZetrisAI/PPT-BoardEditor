@@ -262,6 +262,14 @@ namespace PPTBoardEditor {
                         p++;
                     }
                 }
+
+                listQueue.Items.Clear();
+
+                for (int i = 0; i < save.Length - 401; i++) {
+                    listQueue.Items.Add(new Tetromino(save[p++]));
+                }
+
+                checkLoop.Checked = save[p++] > 0;
             }
 
             ofd.Dispose();
