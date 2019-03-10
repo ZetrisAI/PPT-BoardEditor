@@ -82,6 +82,8 @@ namespace PPTBoardEditor {
                 Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {windowIndex + 1}";
 
                 GameHelper.SwitchTrust(false);
+            } else {
+                bool active = buttonLoad.Enabled = buttonLoad.Visible = buttonSave.Enabled = buttonSave.Visible = false;
             }
         }
 
