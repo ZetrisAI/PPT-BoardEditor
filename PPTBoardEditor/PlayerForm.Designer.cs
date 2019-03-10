@@ -86,7 +86,7 @@
             // checkLoop
             // 
             this.checkLoop.AutoSize = true;
-            this.checkLoop.Location = new System.Drawing.Point(168, 618);
+            this.checkLoop.Location = new System.Drawing.Point(168, 549);
             this.checkLoop.Name = "checkLoop";
             this.checkLoop.Size = new System.Drawing.Size(37, 17);
             this.checkLoop.TabIndex = 4;
@@ -96,7 +96,7 @@
             // buttonLoad
             // 
             this.buttonLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonLoad.Location = new System.Drawing.Point(168, 552);
+            this.buttonLoad.Location = new System.Drawing.Point(168, 573);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(32, 28);
             this.buttonLoad.TabIndex = 5;
@@ -107,7 +107,7 @@
             // buttonSave
             // 
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Location = new System.Drawing.Point(168, 584);
+            this.buttonSave.Location = new System.Drawing.Point(168, 605);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(32, 28);
             this.buttonSave.TabIndex = 5;
