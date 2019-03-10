@@ -30,6 +30,8 @@
             this.canvasSelector = new System.Windows.Forms.PictureBox();
             this.listQueue = new System.Windows.Forms.ListBox();
             this.checkLoop = new System.Windows.Forms.CheckBox();
+            this.buttonLoad = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.canvasBoard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.canvasSelector)).BeginInit();
             this.SuspendLayout();
@@ -72,7 +74,7 @@
             this.listQueue.FormattingEnabled = true;
             this.listQueue.Location = new System.Drawing.Point(168, 13);
             this.listQueue.Name = "listQueue";
-            this.listQueue.Size = new System.Drawing.Size(32, 598);
+            this.listQueue.Size = new System.Drawing.Size(32, 533);
             this.listQueue.TabIndex = 3;
             this.listQueue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listQueue_KeyDown);
             this.listQueue.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listQueue_KeyUp);
@@ -84,12 +86,34 @@
             // checkLoop
             // 
             this.checkLoop.AutoSize = true;
-            this.checkLoop.Location = new System.Drawing.Point(165, 618);
+            this.checkLoop.Location = new System.Drawing.Point(168, 618);
             this.checkLoop.Name = "checkLoop";
-            this.checkLoop.Size = new System.Drawing.Size(50, 17);
+            this.checkLoop.Size = new System.Drawing.Size(37, 17);
             this.checkLoop.TabIndex = 4;
-            this.checkLoop.Text = "Loop";
+            this.checkLoop.Text = "🔁";
             this.checkLoop.UseVisualStyleBackColor = true;
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLoad.Location = new System.Drawing.Point(168, 552);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(32, 28);
+            this.buttonLoad.TabIndex = 5;
+            this.buttonLoad.Text = "📂";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Location = new System.Drawing.Point(168, 584);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(32, 28);
+            this.buttonSave.TabIndex = 5;
+            this.buttonSave.Text = "💾";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // PlayerForm
             // 
@@ -97,6 +121,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(16)))), ((int)(((byte)(16)))));
             this.ClientSize = new System.Drawing.Size(214, 641);
+            this.Controls.Add(this.buttonSave);
+            this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.checkLoop);
             this.Controls.Add(this.listQueue);
             this.Controls.Add(this.canvasSelector);
@@ -121,6 +147,8 @@
         private System.Windows.Forms.PictureBox canvasSelector;
         private System.Windows.Forms.ListBox listQueue;
         private System.Windows.Forms.CheckBox checkLoop;
+        private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.Button buttonSave;
     }
 }
 

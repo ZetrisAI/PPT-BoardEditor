@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PPTBoardEditor {
@@ -247,6 +242,35 @@ namespace PPTBoardEditor {
 
         private void PlayerForm_FormClosing(object sender, EventArgs e) {
             Application.Exit();
+        }
+
+        private void buttonLoad_Click(object sender, EventArgs e) {
+
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e) {
+            SaveFileDialog sfd = new SaveFileDialog {
+                Filter = "PPT Board Files|*.tetboard",
+            };
+
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                if (!sfd.CheckFileExists) {
+                    File.Create(sfd.FileName).Close();
+                }
+
+                byte[] save = new byte[400];
+
+                int p = 0;
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 40; j++) {
+                        save[p++] = (byte)board[i,j];
+                    }
+                }
+
+                File.WriteAllBytes(sfd.FileName, save);
+            }
+
+            sfd.Dispose();
         }
 
         private void listQueue_MouseUp(object sender, MouseEventArgs e) {
