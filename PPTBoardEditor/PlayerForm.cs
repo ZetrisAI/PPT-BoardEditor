@@ -277,7 +277,7 @@ namespace PPTBoardEditor {
                     File.Create(sfd.FileName).Close();
                 }
 
-                byte[] save = new byte[400];
+                byte[] save = new byte[401 + listQueue.Items.Count];
 
                 int p = 0;
                 for (int i = 0; i < 10; i++) {
@@ -285,6 +285,12 @@ namespace PPTBoardEditor {
                         save[p++] = (byte)board[i,j];
                     }
                 }
+
+                for (int i = 0; i < listQueue.Items.Count; i++) {
+                    save[p++] = (byte)((Tetromino)listQueue.Items[i]).Index;
+                }
+
+                save[p++] = (byte)(checkLoop.Checked? 1 : 0);
 
                 File.WriteAllBytes(sfd.FileName, save);
             }
