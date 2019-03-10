@@ -4,7 +4,10 @@ using System.Diagnostics;
 namespace PPTBoardEditor {
     static class GameHelper {
         static ProcessMemory Game = new ProcessMemory("puyopuyotetris");
-        
+
+        public static bool CheckProcess() => Game.CheckProcess();
+        public static void SwitchTrust(bool state) => Game.TrustProcess = state;
+
         public static int DirectRead(int address) => Game.ReadInt32(new IntPtr(address));
         public static bool DirectWrite(int address, int value) => Game.WriteInt32(new IntPtr(address), value);
 
