@@ -245,7 +245,26 @@ namespace PPTBoardEditor {
         }
 
         private void buttonLoad_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog {
+                Filter = "PPT Board Files|*.tetboard",
+            };
 
+            if (ofd.ShowDialog() == DialogResult.OK && ofd.CheckFileExists) {
+                byte[] save = File.ReadAllBytes(ofd.FileName);
+
+                int boardAddress = GameHelper.BoardAddress(playerID);
+
+                int p = 0;
+                for (int i = 0; i < 10; i++) {
+                    int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
+                    for (int j = 0; j < 40; j++) {
+                        GameHelper.DirectWrite(columnAddress + j * 0x04, save[p] + ((save[p] > 127)? -256 : 0));
+                        p++;
+                    }
+                }
+            }
+
+            ofd.Dispose();
         }
 
         private void buttonSave_Click(object sender, EventArgs e) {
