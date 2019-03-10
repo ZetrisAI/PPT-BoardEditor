@@ -30,7 +30,7 @@ namespace PPTBoardEditor {
                 playerIndex = GameHelper.FindPlayer();
 
                 int boardAddress = GameHelper.BoardAddress(playerID);
-                bool active = boardAddress > 0x08000000;
+                bool active = buttonLoad.Enabled = buttonLoad.Visible = buttonSave.Enabled = buttonSave.Visible = boardAddress > 0x08000000;
 
                 if (active) {
                     for (int i = 0; i < 10; i++) {
