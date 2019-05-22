@@ -62,11 +62,15 @@ namespace PPTBoardEditor {
                         Game.ReadInt32(new IntPtr(
                             Game.ReadInt32(new IntPtr(
                                 Game.ReadInt32(new IntPtr(
-                                    0x140461B20
-                                )) + 0x378
-                            )) + 0xA8
-                        )) + 0x3C0
-                    )) + 0x50;
+                                    Game.ReadInt32(new IntPtr(
+                                        Game.ReadInt32(new IntPtr(
+                                            0x140461B20
+                                        )) + 0x378
+                                    )) + 0xC0
+                                )) + 0x10
+                            )) + 0x3c0
+                        )) + 0x18
+                    ));
 
                 case 1:
                     return Game.ReadInt32(new IntPtr(
