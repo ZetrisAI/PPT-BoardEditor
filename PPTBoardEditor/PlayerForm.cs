@@ -7,14 +7,10 @@ namespace PPTBoardEditor {
     public partial class PlayerForm : Form {
         public PlayerForm(int index) {
             InitializeComponent();
-            windowIndex = index;
+            playerID = index;
         }
 
-        int windowIndex, playerIndex;
-        
-        int playerID {
-            get => Convert.ToInt32(windowIndex != playerIndex);
-        }
+        int playerID { get; }
 
         int[,] board = new int[10, 40];
         int[] selectedColor = new int[2] {9, -1};
@@ -26,8 +22,6 @@ namespace PPTBoardEditor {
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.CheckProcess()) {
                 GameHelper.SwitchTrust(true);
-
-                playerIndex = GameHelper.FindPlayer();
 
                 int boardAddress = GameHelper.BoardAddress(playerID);
                 bool active = buttonLoad.Enabled = buttonLoad.Visible = buttonSave.Enabled = buttonSave.Visible = boardAddress > 0x08000000;
@@ -79,7 +73,7 @@ namespace PPTBoardEditor {
                 UIHelper.drawBoard(canvasBoard, board, active);
                 UIHelper.drawSelector(canvasSelector, (int[])selectedColor.Clone(), active);
 
-                Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {windowIndex + 1}";
+                Text = (boardAddress >= 0x08000000) ? GameHelper.PlayerName(playerID) : $"Player {playerID + 1}";
 
                 GameHelper.SwitchTrust(false);
             } else {
