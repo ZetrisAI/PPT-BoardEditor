@@ -11,32 +11,27 @@ namespace PPTBoardEditor {
         public static int DirectRead(int address) => Game.ReadInt32(new IntPtr(address));
         public static bool DirectWrite(int address, int value) => Game.WriteInt32(new IntPtr(address), value);
 
-        public static int PlayerCount() {
-            int ret = Game.ReadByte(new IntPtr(
-                Game.ReadInt32(new IntPtr(
-                    Game.ReadInt32(new IntPtr(
-                        0x140473760
-                    )) + 0x20
-                )) + 0xB4
+        public static int PlayerCount() =>
+            Math.Max(0, Math.Min(4, Game.TraverseInt32(  // Limit this between 0 and 4.
+                new IntPtr(0x140473760),
+                new int[] { 0x20, 0xB4 }
+            ) ?? 0)
+        );
+        
+
+        public static int LocalSteam() => 
+            Game.ReadInt32(new IntPtr(
+                0x1405A2010
             ));
 
-            if (ret > 4) ret = 0;
-            if (ret < 0) ret = 0;
-
-            return ret;
-        }
-
-        public static int LocalSteam() => Game.ReadInt32(new IntPtr(
-            0x1405A2010
-        ));
-
-        public static int PlayerSteam(int index) => Game.ReadInt32(new IntPtr(
+        public static int PlayerSteam(int index) => 
             Game.ReadInt32(new IntPtr(
-                Game.ReadInt32(new IntPtr(
-                    0x140473760
-                )) + 0x20
-            )) + 0x118 + index * 0x50
-        ));
+                Game.TraverseInt32(
+                    new IntPtr(0x140473760),
+                    new int[] { 0x20, 0x118 + index * 0x50 }
+                ) ?? 0
+            )
+        );
 
         public static int FindPlayer() {
             if (PlayerCount() < 2)
@@ -51,210 +46,74 @@ namespace PPTBoardEditor {
             return 0;
         }
 
-        public static string PlayerName(int index) => Game.ReadStringUnicode(new IntPtr(0x140598BD4 + index * 0x68), 0x20);
+        public static string PlayerName(int index) => 
+            Game.ReadStringUnicode(new IntPtr(0x140598BD4 + index * 0x68), 0x20);
 
-        public static bool InMatch() => Game.ReadInt32(new IntPtr(0x140573A78)) == 0x0;
+        public static bool InMatch() => 
+            Game.ReadInt32(new IntPtr(0x140573A78)) == 0x0;
 
-        public static int BoardAddress(int index) {
-            switch (index) {
-                case 0:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        Game.ReadInt32(new IntPtr(
-                                            0x140461B20
-                                        )) + 0x378
-                                    )) + 0xC0
-                                )) + 0x10
-                            )) + 0x3c0
-                        )) + 0x18
-                    ));
+        public static bool InSwap() => 
+            Game.ReadBoolean(new IntPtr(0x14059894C))
+                ? Game.ReadBoolean(new IntPtr(0x1404385C4))
+                    ? Game.ReadByte(new IntPtr(0x140438584)) == 3
+                    : Game.ReadByte(new IntPtr(0x140573794)) == 2
+                : (Game.ReadByte(new IntPtr(0x140451C50)) & 0b11101111) == 4;
 
-                case 1:
-                    return Game.ReadInt32(new IntPtr(
-                         Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        0x1404611B8
-                                    )) + 0x30
-                                )) + 0xA8
-                            )) + 0x3C0
-                        )) + 0x18
-                    ));
-            }
+        public static int BoardAddress(int index) =>
+            Game.TraverseInt32(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? new int[] { 0x378 + index * 0x8, 0xA8, 0x300, 0x3C0, 0x18 }
+                    : new int[] { 0x378 + index * 0x8, 0xC0, 0x10, 0x3C0, 0x18 }
+                ) ?? 0;
+        
 
-            return -1;
-        }
+        public static int QueueAddress(int index) =>
+            (Game.TraverseInt32(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? index == 0
+                        ? new int[] { 0x380, 0x18, 0xB8 }
+                        : new int[] { 0x378 + index * 0x8, 0x1E0, 0xB8 }
+                    : new int[] { 0x378 + index * 0x8, 0xB8 }
+            ) ?? 0) + 0x15C;
 
-        public static int QueueAddress(int index) {
-            switch (index) {
-                case 0:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                0x140461B20
-                            )) + 0x378
-                        )) + 0xB8
-                    )) + 0x15C;
+        public static int CurrentPiece(int index) =>
+            Game.TraverseByte(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? new int[] { 0x378 + index * 0x8, 0x1E0, 0x40, 0x140, 0x110 }
+                    : new int[] { 0x378 + index * 0x8, 0xC0, 0x120, 0x110 }
+            ) ?? 0;
 
-                case 1:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    0x1405989D0
-                                )) + 0x78
-                            )) + 0x28
-                        )) + 0xB8
-                    )) + 0x15C;
-            }
+        public static int RotationPointer(int index) =>
+            Game.TraverseByte(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? new int[] { 0x378 + index * 0x8, 0xA8, 0x300, 0x3C8, 0x18 }
+                    : new int[] { 0x378 + index * 0x8, 0xA8, 0x3C8, 0x18 }
+            ) ?? 0;
 
-            return -1;
-        }
+        public static int HoldPointer(int index) =>
+            (Game.TraverseInt32(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? new int[] { 0x378 + index * 0x8, 0x30, 0x300, 0x3D0 }
+                    : new int[] { 0x378 + index * 0x8, 0xA8, 0x3D0 }
+            ) ?? 0) + 0x8;
 
-        public static int CurrentPiece(int index) {
-            switch (index) {
-                case 0:
-                    return Game.ReadByte(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        0x140461B20
-                                    )) + 0x378
-                                )) + 0x40
-                            )) + 0x140
-                        )) + 0x110
-                    ));
+        public static bool PieceDropped(int index) =>
+            Game.TraverseByte(
+                new IntPtr(0x140461B20),
+                InSwap()
+                    ? new int[] { 0x378 + index * 0x8, 0xA8, 0x300, 0x3C8, 0x1C }
+                    : new int[] { 0x378 + index * 0x8, 0xA8, 0x3C8, 0x1C }
+            ) == 1;
 
-                case 1:
-                    return Game.ReadByte(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        0x1404611B8
-                                    )) + 0x30
-                                )) + 0xC0
-                            )) + 0x18
-                        )) + 0x610
-                    ));
-            }
-
-            return -1;
-        }
-
-        public static int RotationPointer(int index) {
-            switch (index) {
-                case 0:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        0x140460C08
-                                    )) + 0x18
-                                )) + 0x268
-                            )) + 0x38
-                        )) + 0x3C8
-                    )) + 0x18;
-
-                case 1:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        0x1405989D0
-                                    )) + 0x78
-                                )) + 0x20
-                            )) + 0xA8
-                        )) + 0x3C8
-                    )) + 0x18;
-            }
-
-            return -1;
-        }
-
-        public static int HoldPointer(int index) {
-            switch (index) {
-                case 0:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                0x140598A20
-                            )) + 0x38
-                        )) + 0x3D0
-                    )) + 0x8;
-
-                case 1:
-                    return Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    0x1405989D0
-                                )) + 0x270
-                            )) + 0x20
-                        )) + 0x3D0
-                    )) + 0x8;
-            }
-
-            return -1;
-        }
-
-        public static bool PieceDropped(int index) {
-            int ret = 0;
-
-            switch (index) {
-                case 0:
-                    ret = Game.ReadByte(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        Game.ReadInt32(new IntPtr(
-                                            0x140460C08
-                                        )) + 0x18
-                                    )) + 0x268
-                                )) + 0x38
-                            )) + 0x3C8
-                        )) + 0x1C
-                    ));
-                    break;
-
-                case 1:
-                    ret = Game.ReadByte(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            Game.ReadInt32(new IntPtr(
-                                Game.ReadInt32(new IntPtr(
-                                    Game.ReadInt32(new IntPtr(
-                                        Game.ReadInt32(new IntPtr(
-                                            0x1405989D0
-                                        )) + 0x78
-                                    )) + 0x20
-                                )) + 0xA8
-                            )) + 0x3C8
-                        )) + 0x1C
-                    ));
-                    break;
-            }
-
-            return ret != 0;
-        }
-
-        public static int FrameCount() => Game.ReadInt32(new IntPtr(
-            Game.ReadInt32(new IntPtr(
-                Game.ReadInt32(new IntPtr(
-                    Game.ReadInt32(new IntPtr(
-                        Game.ReadInt32(new IntPtr(
-                            0x140598A20
-                        )) + 0x138
-                    )) + 0x18
-                )) + 0x100
-            )) + 0x58
-        ));
+        public static int FrameCount() =>
+            Game.TraverseInt32(
+                new IntPtr(0x140461B20),
+                new int[] { 0x208 }
+            ) ?? 0;
     }
 }
