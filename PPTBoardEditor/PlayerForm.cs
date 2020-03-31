@@ -10,7 +10,7 @@ namespace PPTBoardEditor {
             playerID = index;
         }
 
-        int playerID { get; }
+        int playerID { get; set; }
 
         int[,] board = new int[10, 40];
         int[] selectedColor = new int[2] {9, -1};
@@ -319,6 +319,12 @@ namespace PPTBoardEditor {
 
         private void listQueue_MouseUp(object sender, MouseEventArgs e) {
             lHolding = -1;
+        }
+
+        private void Buttons_Click(object sender, EventArgs e) {
+            if (sender is Button button) {
+                playerID = Convert.ToInt32(button.Text) - 1;
+            }
         }
     }
 }
