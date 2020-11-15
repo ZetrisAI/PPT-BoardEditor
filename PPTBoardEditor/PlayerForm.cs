@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace PPTBoardEditor {
     public partial class PlayerForm : Form {
-        public PlayerForm(int index) {
+        public PlayerForm() {
             InitializeComponent();
-            playerID = index;
+            playerID = 0;
         }
 
         int playerID { get; set; }
@@ -16,21 +17,21 @@ namespace PPTBoardEditor {
         int[] selectedColor = new int[2] {9, -1};
 
         int pieces = 0;
-        int holdPTR = 0x0;
+        long holdPTR = 0x0;
         bool dropState = false;
         
         private void scanTimer_Tick(object sender, EventArgs e) {
             if (GameHelper.CheckProcess()) {
                 GameHelper.SwitchTrust(true);
 
-                int boardAddress = GameHelper.BoardAddress(playerID);
+                long boardAddress = GameHelper.BoardAddress(playerID);
                 bool active = buttonLoad.Enabled = buttonLoad.Visible = buttonSave.Enabled = buttonSave.Visible = boardAddress > 0x08000000;
 
                 if (active) {
                     for (int i = 0; i < 10; i++) {
-                        int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
+                        long columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
                         for (int j = 0; j < 40; j++) {
-                            board[i, j] = GameHelper.DirectRead(columnAddress + j * 0x04);
+                            board[i, j] = (int)GameHelper.DirectRead(columnAddress + j * 0x04);
                         }
                     }
 
@@ -40,32 +41,24 @@ namespace PPTBoardEditor {
                         dropState = drop;
                     }
 
-                    int queueAddress = GameHelper.QueueAddress(playerID);
-                    int current = GameHelper.CurrentPiece(playerID);
-                    if (current == 255 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
+                    long queueAddress = GameHelper.QueueAddress(playerID);
+                    if (GameHelper.GameState(playerID) != 1 && GameHelper.FrameCount() < 140 && listQueue.Items.Count > 0) {
                         for (int i = 0; i < (checkLoop.Checked ? 5 : Math.Min(5, listQueue.Items.Count)); i++) {
                             GameHelper.DirectWrite(queueAddress + i * 0x04, ((Tetromino)listQueue.Items[(pieces + i) % listQueue.Items.Count]).Index);
                         }
                     }
 
-                    int hold = GameHelper.HoldPointer(playerID);
-                    if (holdPTR != hold && holdPTR < 0x08000000 && hold >= 0x08000000) {
-                        int rot = GameHelper.RotationPointer(playerID);
-                        if (rot >= 0x08000000) {
-                            pieces++;
-                        } else {
-                            hold = 0x8;
-                        }
+                    long hold = GameHelper.HeldPiecePointer(playerID);
+                    if (holdPTR != hold && holdPTR < 0x08000000 && hold >= 0x08000000) {  //detects transition between no held piece and having a held piece
+                        pieces++;                                                         //first hold is identical to placing a piece for our needs
                     }
                     holdPTR = hold;
 
-                    if (current != 255 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Checked && listQueue.Items.Count > 0))) {
+                    if (GameHelper.GameState(playerID) != 1 && (pieces + 5 < listQueue.Items.Count || (checkLoop.Checked && listQueue.Items.Count > 0))) {
                         GameHelper.DirectWrite(queueAddress + 0x10, ((Tetromino)listQueue.Items[(pieces + 5) % listQueue.Items.Count]).Index);
                     }
 
                 } else {
-                    int[,] board = new int[10, 40];
-
                     pieces = 0;
                     dropState = false;
                 }
@@ -99,10 +92,10 @@ namespace PPTBoardEditor {
 
                 int x = e.X / 15;
                 int y = 39 - e.Y / 15;
-                int boardAddress = GameHelper.BoardAddress(playerID);
+                long boardAddress = GameHelper.BoardAddress(playerID);
                 
                 if (boardAddress >= 0x08000000 && 0 <= x && x <= 9 && 0 <= y && y <= 39 && board[x, y] != -2) {
-                    int pixelAddress = GameHelper.DirectRead(
+                    long pixelAddress = GameHelper.DirectRead(
                         boardAddress + x * 0x08
                     ) + y * 0x04;
 
@@ -260,17 +253,17 @@ namespace PPTBoardEditor {
                 if (GameHelper.CheckProcess()) {
                     GameHelper.SwitchTrust(true);
 
-                    int boardAddress = GameHelper.BoardAddress(playerID);
+                    long boardAddress = GameHelper.BoardAddress(playerID);
 
                     int p = 0;
+                    
                     for (int i = 0; i < 10; i++) {
-                        int columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
+                        long columnAddress = GameHelper.DirectRead(boardAddress + i * 0x08);
                         for (int j = 0; j < 40; j++) {
                             GameHelper.DirectWrite(columnAddress + j * 0x04, save[p] + ((save[p] > 127) ? -256 : 0));
                             p++;
                         }
                     }
-
                     listQueue.Items.Clear();
 
                     for (int i = 0; i < save.Length - 401; i++) {

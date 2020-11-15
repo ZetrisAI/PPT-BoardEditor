@@ -37,8 +37,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ProcessMemory, Version=1.1.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\ProcessMemory.1.1.0\lib\net45\ProcessMemory.dll</HintPath>
+    <Reference Include="ProcessMemory, Version=1.1.1.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\ProcessMemory.1.1.1\lib\net45\ProcessMemory.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

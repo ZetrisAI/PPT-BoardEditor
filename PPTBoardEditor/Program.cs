@@ -5,15 +5,15 @@ using System.Windows.Forms;
 
 namespace PPTBoardEditor {
     static class Program {
-        static PlayerForm[] players = new PlayerForm[1];
+        static PlayerForm player;
 
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            players[0] = new PlayerForm(0);
-            players[0].Show();
+            player = new PlayerForm();
+            player.Show();
 
             Application.Run();
         }
